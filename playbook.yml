@@ -1,0 +1,53 @@
+- hosts: all
+  tasks:
+   - easy_install:
+      name: pip
+      state: latest
+
+   - name: install certain python modules for docker
+     pip:
+       name: "{{ item.name }}"
+       #version: "{{ item.version }}"
+       state: present 
+     with_items:
+     # - { name: docker, version: 2.0.0 }
+      #- { name: docker-py }
+      - { name: docker-compose }
+
+   - name: 'install docker dependencies'
+     apt:
+       name: '{{ item }}'
+       state: 'present'
+     with_items:
+     - 'apt-transport-https'
+     - 'ca-certificates'
+     - 'curl'
+     - 'software-properties-common'
+
+   - name: pull jenkins image
+     docker_image:
+       name: jenkins:latest
+
+   - name: Create a container from the jenkins docker image
+     docker_container:
+       name: "jenkins-server"
+       image: "jenkins"
+       ports:
+        - "8080:8080"
+        - "5000:5000"
+       state: present
+       recreate: no
+
+   - name: start jenkins-server container
+     docker_container:
+       name: "jenkins-server"
+       image: "jenkins"
+     networks:
+      - name: TestingNet
+        ipv4_address: "192.168.56.150"  
+     register: test
+   - debug: 
+       var: test  
+
+
+
