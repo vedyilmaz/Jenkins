@@ -55,8 +55,8 @@ Vagrant.configure("2") do |config|
       m.vm.network "private_network", ip: "192.168.56.150"
   end
 
-#   config.vm.provision :shell, inline: "apt-get update"
- #  config.vm.provision :docker
+   config.vm.provision :shell, inline: "apt-get update"
+   config.vm.provision :docker
   # #config.vm.provision :docker_login, username: "vedyilmaz", password-stdin
   # config.vm.provision "shell", env: {"USERNAME" => "vedyilmaz", "PASSWORD" => Password.new}, inline: <<-SHELL
   #      # echo username: $USERNAME
